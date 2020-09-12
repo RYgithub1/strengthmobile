@@ -1,10 +1,7 @@
 name: strengthmobile
 description: A new Flutter application.
-
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
+publish_to: 'none'
 version: 1.0.0+1
-
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
@@ -13,6 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.3
+  image_picker: ^0.6.7+7
+  firebase_core: ^0.5.0
+  cloud_firestore: ^0.14.0+2
+  firebase_storage: ^4.0.0
 
 
 dev_dependencies:
@@ -22,3 +23,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  #  assets:
+  #    - assets/videos/
