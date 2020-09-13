@@ -28,7 +28,7 @@ class StrengthMobile extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Strength Recruiting Mobile',
+      title: 'StrengthRecruitingMobile',
       theme: ThemeData(
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -51,26 +51,23 @@ class StrengthListPage extends StatelessWidget {
       ),
       body: StreamBuilder<QuerySnapshot>(  // StreamBuilderで受け取り
           stream: FirebaseFirestore.instance.collection("videos").snapshots(),
-          builder: (context, snapshot) {  // snapshots()を指定 -> 更新時にbuilderの中身が動く
+          builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active){
 
-              return ListView.builder(  // builder:データを元に、ListViewを作成buildする
+              return ListView.builder(  // builderでデータを元にListViewを作成
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
 
                   final video = snapshot.data.docs[index].data();  // docsドキュメントに複数データ
-                  // video変数から中身を取り出して、ListView。（キー）保存時videoUrlやtext
-                  // video["videoUrl"]
-                  // video["text"]
-
-                  return Card(
+                  return Card(  // video変数の中身をListView。（キー）保存時videoUrlやtext
                     child: ListTile(
                       title: Text(video["text"]),
                       trailing: Icon(Icons.play_circle_filled),
                       onTap: () async{
                         await Navigator.of(context).push(
+                          // context,
                           MaterialPageRoute(builder: (context) {
-                            return VideoPage();
+                            return VideoPage(videoU: video["videoUrl"]);  // namedパラメーター
                           }),
                         );
                       },
@@ -106,8 +103,8 @@ class StrengthAddPage extends StatefulWidget {
 }
 
 class _StrengthAddPageState extends State<StrengthAddPage> {
-  String _text = '';  // textデータ格納用
-  File _videoFile;  // File形式で定義
+  String _text = '';
+  File _videoFile;
 
   @override
   Widget build(BuildContext context) {
@@ -126,15 +123,14 @@ class _StrengthAddPageState extends State<StrengthAddPage> {
               color: Colors.orange,
               child: Text("input > video", style: TextStyle(color: Colors.white)),
               onPressed:() async{
-                final pickedVideo = await ImagePicker().getVideo(source: ImageSource.gallery);  // ギャラリーから取得
-                _videoFile = File(pickedVideo.path);  // path指定 -> File取得
-                setState((){});  // State変更通知 -> ファイル形式でfirebaseへ
+                final pickedVideo = await ImagePicker().getVideo(source: ImageSource.gallery);  // ギャラリー指定
+                _videoFile = File(pickedVideo.path);  // path指定、File取得
+                setState((){});  // State変更通知
               },
             ),
 
             // 《テキスト記入内容》
             Text(_text, style: TextStyle(color: Colors.orange),),
-
 
             // 《テキスト記入》
             TextField(
@@ -156,24 +152,24 @@ class _StrengthAddPageState extends State<StrengthAddPage> {
                 color: Colors.orange,
                 onPressed: () async{
                   // [Idの定義]
-                  final videoId = FirebaseFirestore.instance.collection("videos").doc().id;  // ランダム文字列idをvideoId ->名
+                  final videoId = FirebaseFirestore.instance.collection("videos").doc().id;  // ランダム文字列idをvideoId->名
                   // [Storage]
                   final ref = FirebaseStorage().ref().child("videos/$videoId.mp4");
-                  final task = ref.putFile(  // putFileでFileのメタデータ拡張子修正
+                  final task = ref.putFile(  // Storageへアップロード開始(mp4)
                     _videoFile,
                     StorageMetadata(contentType: "video/mp4"),
                   );
-                  await task.onComplete;  // Storageへ保存完了(mp4)
+                  await task.onComplete;  // Storageへアップロー完了(mp4)
                   // [FireStore]
                   final url = await ref.getDownloadURL();  //Firebase上での動画の場所を示すURLを取得
                   await FirebaseFirestore.instance.collection("videos").doc(videoId)
-                      .set({  // add -> set に修正
+                      .set({
                         "text": _text,
                         "videoUrl": url,
                       });  // FireStoreへの保存完了(text,videoUrl)
                   Navigator.of(context).pop();
                 },
-                child: Text('add', style: TextStyle(color: Colors.white)),
+                child: Text('add', style: TextStyle(color: Colors.white),),
               ),
             ),
 
@@ -199,7 +195,8 @@ class _StrengthAddPageState extends State<StrengthAddPage> {
 
 // 【動画画面】
 class VideoPage extends StatefulWidget {
-  VideoPage({Key key}) : super(key: key);
+  VideoPage({Key key, @required this.videoU}) : super(key: key);
+  final String videoU;
   @override
   _VideoPageState createState() => _VideoPageState();
 }
@@ -211,9 +208,7 @@ class _VideoPageState extends State<VideoPage> {
   // 《initState()》
   @override
   void initState() {
-    _controller = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-    );
+    _controller = VideoPlayerController.network(widget.videoU);
     _initializeVideoPlayerFuture = _controller.initialize();
     super.initState();
   }
@@ -225,13 +220,15 @@ class _VideoPageState extends State<VideoPage> {
       appBar: AppBar(
         title: Text('STRENGTH  VIDEO'),
       ),
-      body: FutureBuilder(  // FutureBuilder：VideoPlayerControllerの初期化中にloading spinnerを表示
+      body: FutureBuilder(
         future: _initializeVideoPlayerFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: VideoPlayer(_controller),
+            return Center(
+                child: AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                ),
             );
           } else {
             return Center(child: CircularProgressIndicator());
@@ -240,7 +237,7 @@ class _VideoPageState extends State<VideoPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {  // 動画の再生休止状態について変更通知
+          setState(() {
             if (_controller.value.isPlaying) {
               _controller.pause();
             } else {
