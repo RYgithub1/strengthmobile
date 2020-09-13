@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 
 
 void main() async{
@@ -40,7 +41,7 @@ class StrengthMobile extends StatelessWidget {
 
 
 
-//【一覧画面widget】
+//【一覧画面】
 class StrengthListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -65,6 +66,14 @@ class StrengthListPage extends StatelessWidget {
                   return Card(
                     child: ListTile(
                       title: Text(video["text"]),
+                      trailing: Icon(Icons.play_circle_filled),
+                      onTap: () async{
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) {
+                            return VideoPage();
+                          }),
+                        );
+                      },
                     ),
                   );
                 },
@@ -90,7 +99,7 @@ class StrengthListPage extends StatelessWidget {
 
 
 
-//【追加画面Widget】
+//【追加画面】
 class StrengthAddPage extends StatefulWidget {
   @override
   _StrengthAddPageState createState() => _StrengthAddPageState();
@@ -183,5 +192,73 @@ class _StrengthAddPageState extends State<StrengthAddPage> {
         ),
       ),
     );
+  }
+}
+
+
+
+// 【動画画面】
+class VideoPage extends StatefulWidget {
+  VideoPage({Key key}) : super(key: key);
+  @override
+  _VideoPageState createState() => _VideoPageState();
+}
+
+class _VideoPageState extends State<VideoPage> {
+  VideoPlayerController _controller;
+  Future<void> _initializeVideoPlayerFuture;
+
+  // 《initState()》
+  @override
+  void initState() {
+    _controller = VideoPlayerController.network(
+      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+    );
+    _initializeVideoPlayerFuture = _controller.initialize();
+    super.initState();
+  }
+
+  // 《build()》
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('STRENGTH  VIDEO'),
+      ),
+      body: FutureBuilder(  // FutureBuilder：VideoPlayerControllerの初期化中にloading spinnerを表示
+        future: _initializeVideoPlayerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: VideoPlayer(_controller),
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {  // 動画の再生休止状態について変更通知
+            if (_controller.value.isPlaying) {
+              _controller.pause();
+            } else {
+              _controller.play();
+            }
+          });
+        },
+        child: Icon(
+          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+        ),
+      ),
+    );
+  }
+
+  // 《dispose()》
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
