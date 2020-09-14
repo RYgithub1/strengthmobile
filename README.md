@@ -2,7 +2,7 @@
 
 ## アプリケーション
 
-<img width="321" alt="strengthMobile_topImage" src="https://user-images.githubusercontent.com/62828568/93035017-d5194b80-f676-11ea-90d1-3b323497a522.png">
+<img width="595" alt="strengthMobile_topImagev2" src="https://user-images.githubusercontent.com/62828568/93035661-9389a000-f678-11ea-8983-16a33df52065.png">
 
 ![dart](https://img.shields.io/badge/-Dart-blue)
 ![flutter](https://img.shields.io/badge/-Flutter-lightblue)
@@ -59,7 +59,7 @@ _Strength Recruiting Mobile!_
 
 ### 動画再生ページ
 
-<img width="475" alt="strengthMobile_videoPage" src="https://user-images.githubusercontent.com/62828568/93035098-098d0780-f677-11ea-9551-66a49c361f02.png">
+
 
 - トップページで選択した説明文と、紐づいている動画が表示され、右下のアイコンから再生と休止が可能です。
 
