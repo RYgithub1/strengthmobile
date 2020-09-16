@@ -37,15 +37,15 @@ _Strength Recruiting Mobile!_
 
 <img width="502" alt="strengthMobile_topPage_pre" src="https://user-images.githubusercontent.com/62828568/93035038-e1050d80-f676-11ea-8b86-92d1c3c895d7.png">
 
-- トップページにて、全候補者のプロフィール「名前/アピールポイント/連絡先」を一覧できます。
-- 候補者は、右下のプラスアイコンを押下して、アピールポイント作成ページに遷移します。
+- トップページにて、全候補者のプロフィール「名前/アピールポイント/連絡先」を一覧で確認できます。
+- (プロフィールを掲示したい)候補者は、右下のプラスアイコンを押下することで、アピールポイント作成ページに遷移します。
 
 ### アピールポイント作成ページ
 
 <img width="477" alt="strengthMobile_addPage" src="https://user-images.githubusercontent.com/62828568/93035060-f11ced00-f676-11ea-943f-2936b8a06808.png">
 
 
-- アピールポイント(強み)を表現するため、説明文と動画(赤枠)の投稿が可能です。
+- アピールポイント(自らの強み)を表現するため、説明文と動画(赤枠)の投稿が可能です。
 - 説明文の記入内容は、上方にオレンジ色の文字で表示されます。
 - 「add」ボタンを押下すると、Firebaseへデータを保存できます。
 - 「cancel」ボタンを押下すると、トップページに遷移します。
@@ -54,14 +54,15 @@ _Strength Recruiting Mobile!_
 
 <img width="473" alt="strengthMobile_topPage_post" src="https://user-images.githubusercontent.com/62828568/93035085-fda14580-f676-11ea-8fff-23387df0b422.png">
 
-- 赤枠のように、作成したアピールポイントが一覧に追加されます。
-- 右方の動画アイコンを押下すると、動画再生ページに遷移します。
+- 赤枠のように、作成したアピールポイントがトップページ(一覧画面)に追加されます。
+- 各投稿の右方にある動画アイコンを押下すると、動画再生ページに遷移します。
 
 ### 動画再生ページ
 
+<img width="475" alt="strengthMobile_videoPage" src="https://user-images.githubusercontent.com/62828568/93340874-626fc200-f868-11ea-88df-0d354a6736de.png">
 
-
-- トップページで選択した説明文と、紐づいている動画が表示され、右下のアイコンから再生と休止が可能です。
+- トップページで選択したプロフィールに紐づいている動画が表示されます。
+- 右下のアイコンから再生と休止が可能です。
 
 
 ## 工夫
@@ -69,7 +70,7 @@ _Strength Recruiting Mobile!_
 - 拡張性を考慮
 
   - データの管理に際して、アプリの拡張性を考慮してFirebaseを活用しています。
-  - データベースはCloud FireStore、ストレージはCloud Storageを利用しています。
+  - データベースは「Cloud FireStore」、ストレージは「Cloud Storage」を利用しています。
   
 - 動画の取り扱い
 
@@ -81,7 +82,7 @@ _Strength Recruiting Mobile!_
 
 1. □ ユーザー管理
 2. □ メッセージ交換
-3. □ フォロー・フォロワー（お気に入り）
+3. □ フォロー・フォロワー
 
 ---
 
